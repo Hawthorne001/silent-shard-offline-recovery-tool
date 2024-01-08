@@ -1,14 +1,14 @@
 {
   "name": "snap-recovery-script",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Script to recover the private key of an Snap MPC account using the Snap Backup and Recovery phrase.",
+  "main": "index.ts",
   "scripts": {
-    "recover": "ts-node src/script.ts"
+    "recovery": "ts-node src/script.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["MPC", "Snap", "Metamask", "Recovery", "ECDSA" ],
+  "author": "susheendhar@silencelaboratories.com",
+  "license": "MIT",
   "dependencies": {
     "@metamask/key-tree": "^9.0.0",
     "@metamask/snaps-rpc-methods": "^3.1.0",

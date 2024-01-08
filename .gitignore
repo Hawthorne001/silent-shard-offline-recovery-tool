@@ -1,3 +1,5 @@
 node_modules/
 .DS_Store
-
+backup.json
+recovery_phrase.txt
+exported-keys.json

@@ -78,7 +78,7 @@ const getDerivationPath = (indices: number[]) => {
 async function getEntropy(
   mnemonicPhrase: string,
   snapId: string,
-  salt = ""
+  salt = "",
 ): Promise<string> {
   const snapIdBytes = stringToBytes(snapId);
   const saltBytes = stringToBytes(salt);
@@ -111,7 +111,7 @@ async function getEntropy(
  */
 async function decSnapBackup(
   entropyHex: string,
-  snapBackup: string
+  snapBackup: string,
 ): Promise<Uint8Array> {
   try {
     if (entropyHex.startsWith("0x")) {
@@ -166,7 +166,7 @@ export async function exportKeys(mnemonicPhrase: string, backup: SnapBackup) {
     const entropyHex = await getEntropy(
       mnemonicPhrase,
       SNAP_ID,
-      hexToBytes(salt).toString()
+      hexToBytes(salt).toString(),
     );
 
     // Decrypt the snap backup data
@@ -184,7 +184,7 @@ export async function exportKeys(mnemonicPhrase: string, backup: SnapBackup) {
     // Decode the app backup data
     const app = sodium.from_base64(
       walletBackup.keyshare,
-      sodium.base64_variants.ORIGINAL
+      sodium.base64_variants.ORIGINAL,
     );
     const appData = JSON.parse(dec.decode(app));
 
@@ -199,7 +199,7 @@ export async function exportKeys(mnemonicPhrase: string, backup: SnapBackup) {
     const address = bytesToHex(keccak256(publicKey.slice(1))).substring(26);
     console.assert(
       "0x" + address === walletBackup.address,
-      "Recovered private key, but there's an address mismatch. Keyshare pair is invalid. This is a bug."
+      "Recovered private key, but there's an address mismatch. Keyshare pair is invalid. This is a bug.",
     );
 
     privateKeys.push({
@@ -210,23 +210,3 @@ export async function exportKeys(mnemonicPhrase: string, backup: SnapBackup) {
 
   return privateKeys;
 }
-
-// const phrase =
-//   "replace frog rebuild copy unique pulp wait hat husband this smile cable";
-
-// const backup = {
-//   time: "2024-01-08T14:46:29.319933Z",
-//   version: 1,
-//   wallet: [
-//     {
-//       address: "0x878bccf7fbc26fd6dae0001eebb7d892be60e7bd",
-//       keyshare:
-//         "eyJ4MiI6eyJjdXJ2ZSI6InNlY3AyNTZrMSIsInNjYWxhciI6ImU5N2ZhM2FlMzIwOTE5ZWExYzRmNjRjNTYxNjYxNDQ2YWNlZTgxNTBmYzU2ZDAxNTA3ZmJlMDMxZjc2NGRiODgifSwicm9vdF9wdWJsaWNfa2V5Ijp7ImN1cnZlIjoic2VjcDI1NmsxIiwicG9pbnQiOiIwM2I4ZTQ3YWJiYWQyYWI4YzhjMjM1MWM3YTZmMzFmYzJjMDYzYWQyZTJjNzE3YWFmZjQ0MDlhZTk1N2M2Y2YyNGIifSwiY19rZXlfeDEiOiI3MjIwZTMxZmRmYTExZGMxNDJmOTIzOWU4Y2U5OWVkNmEyMWNjYzE5MzlmMjY0M2JjYWYwOTRkNDI1ZmVlN2I4YzUxYmViZmZmOWJmNWYzMGNhMTlkM2I1MWZmZTQ1ZTU5N2FhM2Y1YjRiOGNmN2NhOGQ2N2E2MGQ0NzU2NTZhZDk1MTgxOWI5NjE4MTU3MDUzN2I4NzE1ZjMxYzM4Mzc0ZGZmZjY5MzUyMzRhYWVhMzBhZDE3OTUzNzI5MGYxZjFjNGM1ZjUxMmZiMWZhOWU3OGViNjBhN2FmYTA4NGI3YmNjZDZhOTU2ZTM1ZTU5ZTFiYjBlMTZmZmUxZjBhNWIwZmFhODVjMmYzZjU0MWZjYjc4NzU2OWYzYzI2MzE5ZjgyZTk2ZTU3NWYzNDkyZWIxZmUzYjYxZTcxMGJlYzE4YTU4NTE4NzQwODZiZGIyM2RlZDNjNjA4MGU2MDU1ZjBmMGM3Zjk2Nzc4MmUxZTYwNzliZmE1YTU3ODIxZjI5ZjAxNmQzM2NjODA5NGI0MWEwZGI5MGEwNWU1ZTJmZTY0ZGIxYWM4ZTg5ZjhmYzQ5Y2Y3OGJiN2ZmOTFiODNkZjFhZGI1MDQwODdhOGNlYTg3YTIxNzgxMTQ4OWI2YzJhYjhlNWUwMmI4MjQ5NzVlYzdlMmI5YzIyMTBjYzliNWMwMTdlMjY3NDZhZjE4MGUxMmMwMzViNWVlN2ZjYjg4NTUyYjQwODVkZWM1MjUwYzU1ODZkMjczYTgzYjM1ZWE4OGRjMjBlOTFjNDNhNjU1ZjEzYmFiNjMyZDFmMzA4YTJhOTk4NGIzNGUzMDViY2U3YTU5Y2UwNjZiZjNiNThhOWRkMTZlODRmMjNkOTdjNmVjMTZhZTM5ZTRiY2RmNmFlNGQ2OTZhMWIzMGQwYjhiNGRkMDJjZDM5ZDUyMGMyYjU1MzhhYWQ3MDIxNDQzYWI0NjQwMzMwOTRkNjRlZGExYjE1MmFiZTNmNjg3N2QyMDY5NWIxZGIzOTgwZjNkOTFjNDc1NDA3YTI4MGQyNjE3YTdiZDdhYzVlYzkyMmMzM2IzMjc3YmEzODZlOTMxODYwN2ExY2QwZGFiNmM1YmI1MzI2YWFkMTZhMWZjYTE4ZGQxMzYwMTU3NjMxZTEwNmZlMTU1NDZmODRiZDhjNjE5Yzg5YWNlYmZiYTliY2E3ZjBkNDY0NjRhNGZmYTdiNGY0MzAyZDQ4YTI1ZjIzMWE5NDM5ZmUxNGMzODFkMzJiMDBhMWU0ZDFiN2RiZmU3MDViZDMzMzk4OTY1NTQxNjQ2ZTQzNjQxZGU0MTE0NDYyMDFhZjU1NTI2NzYzY2RhZWJhZmZmNjgyN2IyODE4NmRhMzJmIiwicGFpbGxpZXJfcHVia2V5Ijp7Im4iOiIyMTcwNTQzNzMzNjQwNjgwMjg1MDAwNzM3MjU5ODM3NDkxMDk3MDUyMDc2NTk4MzY1OTA0NzM1NTYyODMxOTM2Njc2MDUzNTI5NTk5OTAxMzE3ODI3MjQ3MjYyMjU0ODk5MTUzOTAxOTM3NjI3OTkxNjI0NzA4OTM5NjI3NjIyNjQwODYxMzc0OTIyNDk2NjA1NzQ1MzI2NzI3NjU0MjQwMzYwMTIwOTQ4OTk5MTA1Nzk3MzY4MDYxMjcwODY4MDY3ODk5NTE2NzMxNTQ2MTM2MjQ4MDU1MDgwMDg4MDI3MDE0MDk4NTU5NzkzMDY5MzkzNTk3MTgwMzUxOTI1ODE2NzA3Nzk4MDc5OTUyMTQ0MzQxNjIyMDUyOTg1MzcxMjUzMjM5MTM3MjM5NDM0MjQ5MTgzMDY1Njk1NzQ2ODMxODI5MDUyNzMzNTU5Nzc5NzMzOTczNzk2NjExNDAwOTQyMjAyODE5ODc5Nzk0NDIzNDgwOTMzMDI2NTU1OTMxOTIwMjAwODczMjY4MDYxMjI5OTMyODUyMjQ4OTg0MTU3NTk0NDYwODA0NTQ3MTIzMTk2OTQ1Njc2OTQ3MDM3NzQwMTQyMTQ1MDU5OTI2MDYxOTU1MjAwODE5NDI2Mzk3MjkxNzIyNzI4MzYzNTkxNjc0NzgzMjI4NDY2ODk5NDkwOTM1MjgxNjM1MTg2ODU4NDQ3OTM3MTEyMzgzNTcxODgwNTU3MzQ5Njk1Nzc5MzAzMjQ2NjI3NjY5ODEyODYyMzkxMDU0MTQ4NzQ1NDYwODQxODMwOTg2MDk3NzYzNTQ2MjIyNTI2NjQwNyJ9fQ==",
-//       remote:
-//         "c13902cea22088fac5ed3e8be950cff0a1597ac68d926e7ce7789e463fe42bed.7c2a6b9ed828c8f76566a1410db2487b82e2cd4dc2117e0f.WJER7sFxfaoODCKgTGVnkPcdNRCflz3DVl6ITG0RDhVf0L_Eg5mtHC-Ktp3g9qRN3d8EgkG4V5bPVJLyiwZsETR9rcPF260ClBvE0sHiCect7YEt0SPL1_7Q4eTORV-tTunefYerEEg3JhOVp1h9fpxPGwU6P2Y4klLRd-dyvvG92TIxPH7gNwXmQx0NQ6zjjrIZMgUz3Z1CqSTVwy44yFkJUYjGakZly2RVd_4sDahT6JNn3HivbflceWSw5G1JsO7l6yapmCxnGPNXFv7PRo4GAjp9lAEQ95WTaV2E2eRqdFUddLZCYDl0Mi9hxgoAhW1krzXEN1aUGeXkBHKgkKJtP-HU62TRdWjtqaR8_rGQ34C90Beb2iX1a706ShisXbdJP4fzbKmD6BblX4o032PfbyupWhGm35AJnJAf4LfDZvIxjxx06i_1ZrIEyqBSl9_2gbzs1FC1W2l8bpsvx3M6SyGs8h_bklRbT3xI1s_MPnK2trr4Qrg-Dxq3XrxG8RfPeIT3qW9LfszAE0WrKLmOSA0VSCAzfwdV2djRiKIKgKn4bzpQrwg3XjIaxKCgfYLbjG8ylkz-CGQ1iF807qrG7TvxWjhLVD-Ydm7X-WG01yjwV4QD8BKMe348Qk9Ti2XmcOAp6Y0XaGCzxDS4XLuIqXHpi_RB03RvOYlwRMVLZeMqxJA6QDgdQmqxdw9-UROTCqIwch3xv_-C6j1BTdcbJ9840LFKMl7aqwtM25VfsDzMGbfIpbMRaEZVQ6xB9xhWEsdRIaNR5WstL34qtkKKRHnlFgI77qbAt6PcR6gpYw_Mwv6q1nOHlvFntXq6kAsXByW8GBzzI_Nx7ctmFuujJoWM7YUS7n2woOX4BiZEpByo38ZLaG_hWywD_-V_andGmWrzouldJuNkda88PruAwGqZl5PnkdhJqsmkGhr3UWhXqbbDKn6bXGveDKkdc6cKKgvLRVYsf6TCZbtETvUdLZBFfzLSf3qsV5l-V4C_MmTYbCKngceKayyHpFKQ4qZxcmK2UqK-RDSco8ZQWToaIGaKt-62-kSiW3Q3OLDOzM2fwSuF9_EI0d-BvXs4fXvq0GutYbvTkEQy2Oc6hnJdYYSp70mBJ8Gw60FDG8r5xh6YyBALLp0e8UNL0ql0Pu36xCQzBBmUBaJ5TI4-wbEebGNQpTr6o4J9uWJjJabuxSc9rgzQK2pK6NGvjZSxjjEyn6_hYD-SK8L2Ci5KhB41OZ894uW5f7eEcOmpF4OtOT0YiygqA__2XbdiE4Jsm0tKastKyHQPGuJos6AoElJgX5SW3nmCm0VCc5vftYrUsfGG4WWbU8x2SgNquLlIFo_gWipYtgPRpaN7cBY7xmfLBy9r862uugYP7yVU-vdl485e3UaCjug0osEPGW_fXyQsLH_PQHW42WQN8Ef6FAlZxHFtGdPMGjrS7VfBe93OvViXOz7NbR5TexGG04Kg0J2ONl4-YtqGly25oUL8ILlPEWtl5NE3buBWt_ahMZGzSetAOIko7GdM-h54Bjdb_b-BmHdhyQ",
-//     },
-//   ],
-//   hash: "d6ee65f3e085e1f7fb697d7b172450bab5d49de1817e04dacad2f8c4025139c5",
-// };
-
-// exportKeys(phrase, backup).then((keys) => console.log(keys));
